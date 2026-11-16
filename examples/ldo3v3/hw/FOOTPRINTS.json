@@ -1,0 +1,19 @@
+{
+  "schema": "pcbh/footprints/1",
+  "footprints": [
+    {"name": "TERM_1x02", "source": "KF128 datasheet: 3.5 mm pitch, 2P", "verified_by": "manual: pitch and pad size from datasheet drawing",
+     "pads": "2 x 2.0 x 2.0 mm, 3.5 mm pitch", "courtyard": "10.0 x 6.0 mm"},
+    {"name": "R_1206", "source": "IPC-7351 nominal 1206", "verified_by": "manual: nominal land pattern",
+     "pads": "2 x 1.2 x 1.6 mm, 2.8 mm pitch", "courtyard": "4.0 x 2.6 mm"},
+    {"name": "C_1206_V", "source": "IPC-7351 nominal 1206", "verified_by": "manual: nominal land pattern",
+     "pads": "2 x 1.2 x 1.4 mm, 2.8 mm pitch", "courtyard": "4.0 x 3.4 mm"},
+    {"name": "C_0603_V", "source": "IPC-7351 nominal 0603", "verified_by": "manual: nominal land pattern",
+     "pads": "2 x 0.8 x 0.9 mm, 1.5 mm pitch", "courtyard": "2.6 x 2.0 mm"},
+    {"name": "D_SMA", "source": "SS14 datasheet: SMA body 4.3 x 2.6 mm", "verified_by": "manual: pad centres at +/-1.9 mm",
+     "pads": "2 x 1.8 x 1.6 mm", "courtyard": "5.6 x 3.2 mm"},
+    {"name": "U_SOT223", "source": "AMS1117 datasheet: SOT-223, 2.3 mm pitch, tab 2.2 mm from pin row", "verified_by": "manual: pin 1 = GND, pin 2 = VOUT, pin 3 = VIN, tab = VOUT",
+     "pads": "3 x 1.2 x 2.0 mm at 2.3 mm pitch + tab 3.4 x 2.0 mm", "courtyard": "7.0 x 7.0 mm"},
+    {"name": "TP_1PAD", "source": "bare 1.2 mm pad for a scope probe", "verified_by": "manual: probe tip fits, no part to verify",
+     "pads": "1 x 1.2 x 1.2 mm", "courtyard": "0"}
+  ]
+}

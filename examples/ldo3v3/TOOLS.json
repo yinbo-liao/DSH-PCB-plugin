@@ -1,0 +1,31 @@
+{
+  "schema": "pcbh/tools/1",
+  "tools": [
+    {"id": "B2_kicad_drc", "tool": "kicad-cli pcb drc", "determinism": "deterministic", "strength": "strong",
+     "blind_spots": ["impedance", "thermal", "EMC", "assembly yield"],
+     "evidence": "exit code + DRC report", "independent_path": "monitor re-runs on a clean checkout"},
+    {"id": "B2g_geometry", "tool": "harness geometry engine", "determinism": "deterministic", "strength": "medium",
+     "blind_spots": ["roundrect/oval pads approximated as rectangles", "no fill/zone awareness", "no impedance"],
+     "evidence": "violation list with coordinates", "independent_path": "same engine runs on the export (.kicad_pcb)"},
+    {"id": "B3g_netlist_parity", "tool": "harness parity", "determinism": "deterministic", "strength": "medium",
+     "blind_spots": ["cannot see intent, only connectivity"], "evidence": "diff report",
+     "independent_path": "recomputed by the monitor from netlist and board"},
+    {"id": "B3x_export_parity", "tool": "harness sexpr reader", "determinism": "deterministic", "strength": "medium",
+     "blind_spots": ["only understands the subset of .kicad_pcb it reads"],
+     "evidence": "shape-set diff", "independent_path": "monitor parses the export itself"},
+    {"id": "C7_footprint_record", "tool": "harness record check", "determinism": "deterministic", "strength": "medium",
+     "blind_spots": ["trusts the recorded verification note"], "evidence": "coverage of footprints",
+     "independent_path": "monitor re-reads FOOTPRINTS.json"},
+    {"id": "llm_review", "tool": "model", "determinism": "statistical", "strength": "weak",
+     "blind_spots": ["everything geometric", "confidence without evidence"],
+     "evidence": "prose only", "independent_path": "none - cannot close a gate"}
+  ],
+  "gate_checks": {
+    "G4": ["B2_kicad_drc", "B2g_geometry", "B3g_netlist_parity", "B3x_export_parity", "C7_footprint_record"]
+  },
+  "capability_gaps": [
+    "signal integrity, power integrity, EMC: no tool in this environment",
+    "impedance control: not applicable at DC, would need a field solver",
+    "thermal: hand calculation only, measurement at S7"
+  ]
+}

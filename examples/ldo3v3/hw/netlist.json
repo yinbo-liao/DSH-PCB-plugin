@@ -1,0 +1,25 @@
+{
+  "schema": "pcbh/netlist/1",
+  "board": "LDO3V3",
+  "nets": [
+    {"name": "VIN",   "pads": [["J1","1"],["F1","1"]]},
+    {"name": "VIN_F", "pads": [["F1","2"],["D1","1"]]},
+    {"name": "5V",    "pads": [["D1","2"],["C1","2"],["C2","2"],["U1","3"],["TP1","1"]]},
+    {"name": "3V3",   "pads": [["U1","2"],["U1","4"],["C3","2"],["C4","2"],["J2","1"],["TP2","1"]]},
+    {"name": "GND",   "pads": [["J1","2"],["C1","1"],["C2","1"],["C3","1"],["C4","1"],["U1","1"],["J2","2"],["TP3","1"]]}
+  ],
+  "parts": [
+    {"ref": "J1", "value": "5V IN", "footprint": "TERM_1x02"},
+    {"ref": "F1", "value": "0.5A", "footprint": "R_1206"},
+    {"ref": "D1", "value": "SS14", "footprint": "D_SMA"},
+    {"ref": "C1", "value": "10uF", "footprint": "C_1206_V"},
+    {"ref": "C2", "value": "100nF", "footprint": "C_0603_V"},
+    {"ref": "U1", "value": "AMS1117-3.3", "footprint": "U_SOT223"},
+    {"ref": "C3", "value": "22uF", "footprint": "C_1206_V"},
+    {"ref": "C4", "value": "100nF", "footprint": "C_0603_V"},
+    {"ref": "J2", "value": "3V3 OUT", "footprint": "TERM_1x02"},
+    {"ref": "TP1", "value": "5V", "footprint": "TP_1PAD"},
+    {"ref": "TP2", "value": "3V3", "footprint": "TP_1PAD"},
+    {"ref": "TP3", "value": "GND", "footprint": "TP_1PAD"}
+  ]
+}

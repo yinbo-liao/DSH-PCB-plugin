@@ -1,0 +1,5 @@
+# Inserts this bundle's plugin entry into the host composition.
+- insert:
+    - id: dsh-pcb
+      name: '@yinbo-liao/dsh-pcb'
+      config: {}

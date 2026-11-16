@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "PCB Design Harness",
+    "description": "Verification spine for PCB design: typed packets, a hash-chained evidence ledger, an independent gate monitor and a deterministic geometry DRC."
+  }
+}

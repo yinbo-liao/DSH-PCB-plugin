@@ -1,0 +1,23 @@
+{
+  "schema": "pcbh/gap/1",
+  "phase": "plan",
+  "matrix": [
+    {"req": "REQ-01", "element": "D1 + F1", "status": "unverified", "test_planned": true},
+    {"req": "REQ-02", "element": "U1 + C3 + C4", "status": "unverified", "test_planned": true},
+    {"req": "REQ-03", "element": "dropout budget", "status": "unverified", "test_planned": true},
+    {"req": "REQ-04", "element": "J2 + TP1-TP3", "status": "unverified", "test_planned": true},
+    {"req": "REQ-05", "element": "2 cm2 copper on U1 talon", "status": "partial", "test_planned": true},
+    {"req": "REQ-07", "element": "Edge.Cuts 48x32, 2 layers", "status": "unverified", "test_planned": true}
+  ],
+  "gaps": [
+    {"id": "GAP-01", "req": "REQ-06", "class": "missing", "detail": "LED indicator deferred; REQ-06 is should-have so it is excluded from the must matrix",
+     "owner": "architect", "plan": "add R+LED in revision B", "closure_test": "visual check at S7"},
+    {"id": "GAP-02", "req": "REQ-02", "class": "partial", "detail": "MPNs are illustrative; no supplier API to verify existence, stock or lifecycle",
+     "owner": "part-scout", "plan": "wire a parts API in phase 2; until then a human checks each MPN before ordering",
+     "closure_test": "each BOM line shows a supplier-confirmed snapshot with a timestamp"},
+    {"id": "GAP-03", "req": "REQ-05", "class": "partial", "detail": "Tj is calculated, not measured; theta_ja 60 C/W is an assumption",
+     "owner": "test-engineer", "plan": "thermocouple measurement at S7", "closure_test": "CRIT-05 measured value recorded"}
+  ],
+  "match_score": 0.3,
+  "note": "Low score at S5 is correct: nothing has been measured yet. G3 only requires no missing/contradicted must-haves and a planned test for each unverified item; 0.90 is a G6 requirement."
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "pcbh/power/1",
+  "rails": [
+    {"name": "5V", "source": "J1 via F1 and D1", "supply_v": 5.0, "supply_current_ma_max": 500, "margin_pct": 30,
+     "loads": [
+       {"name": "U1 input current (300 mA out, linear)", "current_ma_worst": 238},
+       {"name": "Indicator / misc", "current_ma_worst": 0}
+     ],
+     "note": "F1 is 0.5 A; allowed 350 mA after 30% margin"},
+    {"name": "3V3", "source": "U1 AMS1117-3.3", "supply_v": 3.3, "supply_current_ma_max": 800, "margin_pct": 30,
+     "loads": [
+       {"name": "External load at J2", "current_ma_worst": 250},
+       {"name": "Reserved for indicator", "current_ma_worst": 20}
+     ],
+     "note": "AMS1117 rated 800 mA; allowed 560 mA; thermal, not current, is the binding limit"}
+  ],
+  "thermal": [
+    {"ref": "U1", "calc": "(5.5 - 3.3) V x 0.300 A = 0.66 W", "theta_ja_c_per_w": 60,
+     "rise_c": 39.6, "tj_est_c": 64.6, "limit_c": 85, "margin_c": 20.4,
+     "note": "theta_ja 60 C/W assumes ~2 cm2 copper on the tab; measured at S7"}
+  ]
+}

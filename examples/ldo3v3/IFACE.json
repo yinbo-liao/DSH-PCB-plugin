@@ -1,0 +1,17 @@
+{
+  "schema": "pcbh/iface/1",
+  "interfaces": [
+    {"net": "VIN", "from": "J1.1", "to": "F1.1", "voltage_v": 5.0, "current_ma_peak": 350, "protocol": "dc"},
+    {"net": "VIN_F", "from": "F1.2", "to": "D1.1", "voltage_v": 5.0, "current_ma_peak": 350, "protocol": "dc"},
+    {"net": "5V", "from": "D1.2", "to": "U1.3", "voltage_v": 4.6, "current_ma_peak": 250, "protocol": "dc",
+     "note": "post-Schottky rail; feeds C1/C2/TP1"},
+    {"net": "3V3", "from": "U1.2", "to": "J2.1", "voltage_v": 3.3, "current_ma_peak": 300, "protocol": "dc",
+     "note": "regulated output; feeds C3/C4/TP2"},
+    {"net": "GND", "from": "J1.2", "to": "J2.2", "voltage_v": 0, "current_ma_peak": 300, "protocol": "return"}
+  ],
+  "pin_conflicts": [],
+  "decoupling_plan": [
+    {"ref": "C2", "value": "100nF", "at_ic": "U1", "distance_mm": 6},
+    {"ref": "C4", "value": "100nF", "at_ic": "U1", "distance_mm": 9}
+  ]
+}

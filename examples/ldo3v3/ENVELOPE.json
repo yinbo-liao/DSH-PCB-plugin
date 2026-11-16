@@ -1,0 +1,8 @@
+{
+  "schema": "pcbh/envelope/1",
+  "board_class": "2-layer, low-voltage DC, no programmable device",
+  "in_scope": ["2-4 layers", "DC < 60 V", "< 3 A per rail", "audio-band analog", "proto to small series"],
+  "out_of_scope": ["mains", "RF", "USB HS/SS", "precision low-noise analog", "safety-critical", "certification"],
+  "verdict": "IN_ENVELOPE",
+  "notes": "Fastest signal is a DC rail; no impedance control required. Thermal is the dominant risk."
+}

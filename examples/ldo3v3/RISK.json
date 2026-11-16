@@ -1,0 +1,32 @@
+{
+  "schema": "pcbh/risk/1",
+  "scoring": "rpn = severity x likelihood x (6 - detectability); >=60 is critical",
+  "risks": [
+    {"id": "R-01", "category": "thermal", "hazard": "U1 dissipates 0.66 W at 5.5 V in, 300 mA out",
+     "severity": 4, "likelihood": 3, "detectability": 3, "rpn": 36,
+     "mitigation": "2 cm2 copper on the tab; Tj calculation in POWER.json; measured at S7",
+     "residual_rpn": 12, "trigger": "tab temperature above 60 C"},
+    {"id": "R-02", "category": "electrical", "hazard": "AMS1117 specified for ESR > 0.1 ohm output capacitor; 22 uF ceramic may oscillate",
+     "severity": 4, "likelihood": 4, "detectability": 2, "rpn": 64,
+     "mitigation": "0.5 ohm series resistor in the C3 branch; load-step test at S7; alternate regulator if unstable",
+     "residual_rpn": 16, "trigger": "ringing or oscillation on the load-step scope capture"},
+    {"id": "R-03", "category": "sourcing", "hazard": "Parts not verified against a supplier API in this environment",
+     "severity": 3, "likelihood": 3, "detectability": 2, "rpn": 36,
+     "mitigation": "alternates listed; supplier check required before ordering (GAP-02)",
+     "residual_rpn": 18, "trigger": "any part out of stock or NRND at order time"},
+    {"id": "R-04", "category": "dfm", "hazard": "Hand-solder assembly of 0603 and SOT-223 by a first-time builder",
+     "severity": 3, "likelihood": 3, "detectability": 2, "rpn": 36,
+     "mitigation": "footprint record with courtyard, visual inspection, pre-power continuity check",
+     "residual_rpn": 12},
+    {"id": "R-05", "category": "mechanical", "hazard": "Terminal block pads take insertion force with no through-hole plating support",
+     "severity": 3, "likelihood": 2, "detectability": 3, "rpn": 18,
+     "mitigation": "2 mm pads, 2.0 mm annulus, avoid rework on these pads", "residual_rpn": 9},
+    {"id": "R-06", "category": "electrical", "hazard": "Reverse connection of the input terminal",
+     "severity": 4, "likelihood": 3, "detectability": 4, "rpn": 24,
+     "mitigation": "D1 series Schottky blocks reverse current; silkscreen marks + and -", "residual_rpn": 8},
+    {"id": "R-07", "category": "security", "hazard": "Untrusted datasheet text could contain instructions",
+     "severity": 2, "likelihood": 2, "detectability": 2, "rpn": 16,
+     "mitigation": "datasheet text is treated as data; no tool call is derived from it without a recorded decision",
+     "residual_rpn": 8}
+  ]
+}

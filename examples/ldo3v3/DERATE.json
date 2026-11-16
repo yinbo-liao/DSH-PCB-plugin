@@ -1,0 +1,14 @@
+{
+  "schema": "pcbh/derate/1",
+  "items": [
+    {"ref": "C1", "type": "capacitor", "parameter": "voltage", "rated": 16, "applied": 5.0},
+    {"ref": "C2", "type": "capacitor", "parameter": "voltage", "rated": 50, "applied": 5.0},
+    {"ref": "C3", "type": "capacitor", "parameter": "voltage", "rated": 6.3, "applied": 3.3},
+    {"ref": "C4", "type": "capacitor", "parameter": "voltage", "rated": 50, "applied": 3.3},
+    {"ref": "D1", "type": "semiconductor", "parameter": "current", "rated": 1.0, "applied": 0.238},
+    {"ref": "U1", "type": "semiconductor", "parameter": "current", "rated": 0.8, "applied": 0.300},
+    {"ref": "F1", "type": "connector", "parameter": "current", "rated": 0.5, "applied": 0.238},
+    {"ref": "J1", "type": "connector", "parameter": "current", "rated": 2.0, "applied": 0.238},
+    {"ref": "J2", "type": "connector", "parameter": "current", "rated": 2.0, "applied": 0.300}
+  ]
+}

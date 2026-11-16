@@ -1,0 +1,13 @@
+{
+  "schema": "pcbh/assumptions/1",
+  "assumptions": [
+    {"id": "AS-01", "statement": "Load draws at most 300 mA continuous on 3.3 V",
+     "if_wrong": "thermal margin and C3 ripple budget are invalid; regulator may drop out or overheat"},
+    {"id": "AS-02", "statement": "Ambient inside the test setup is 25 C, still air",
+     "if_wrong": "Tj rises ~1 C per ambient degree; REQ-05 fails above ~45 C ambient without extra copper"},
+    {"id": "AS-03", "statement": "The input supply is a bench PSU limited to 1 A",
+     "if_wrong": "F1 may trip on inrush into C1"},
+    {"id": "AS-04", "statement": "Assembly is hand-soldered for the trial, JLCPCB only for the bare board",
+     "if_wrong": "assembly-related DFM rules (paste, panel) are not applied in this revision"}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "pcbh/plan/1",
+  "budget": {"packet_iterations": 3, "stage_iterations": 8, "task_iterations": 40},
+  "tasks": [
+    {"id": "T01", "artifact": "REQ", "role": "requirements-analyst", "stage": "S0", "depends_on": []},
+    {"id": "T02", "artifact": "ARCH", "role": "architect", "stage": "S1", "depends_on": ["T01"]},
+    {"id": "T03", "artifact": "IFACE", "role": "architect", "stage": "S1", "depends_on": ["T02"]},
+    {"id": "T04", "artifact": "POWER", "role": "architect", "stage": "S1", "depends_on": ["T02"]},
+    {"id": "T05", "artifact": "BOM", "role": "part-scout", "stage": "S1", "depends_on": ["T02"]},
+    {"id": "T06", "artifact": "DERATE", "role": "part-scout", "stage": "S1", "depends_on": ["T05"]},
+    {"id": "T07", "artifact": "TARGETS", "role": "requirements-analyst", "stage": "S2", "depends_on": ["T01", "T04"]},
+    {"id": "T08", "artifact": "TOOLS", "role": "tool-scout", "stage": "S3", "depends_on": ["T07"]},
+    {"id": "T09", "artifact": "PLAN", "role": "supervisor", "stage": "S4", "depends_on": ["T07", "T08"]},
+    {"id": "T10", "artifact": "RISK", "role": "supervisor", "stage": "S5", "depends_on": ["T04", "T05"]},
+    {"id": "T11", "artifact": "GAP", "role": "supervisor", "stage": "S5", "depends_on": ["T07"]},
+    {"id": "T12", "artifact": "PCB", "role": "layout-engineer", "stage": "S6", "depends_on": ["T03", "T05"]},
+    {"id": "T13", "artifact": "NETLIST", "role": "layout-engineer", "stage": "S6", "depends_on": ["T03"]},
+    {"id": "T14", "artifact": "FOOTPRINT_RECORD", "role": "layout-engineer", "stage": "S6", "depends_on": ["T05"]}
+  ],
+  "schedule": {"design_days": 1, "fab_lead_days": 5, "assembly_days": 3, "respin_allowance_days": 10},
+  "notes": "One re-spin is budgeted. Assembly is hand-solder for the trial, so no paste/panel tasks."
+}

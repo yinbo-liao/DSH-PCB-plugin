@@ -1,0 +1,26 @@
+{
+  "schema": "pcbh/targets/1",
+  "criteria": [
+    {"id": "CRIT-01", "req": "REQ-01", "category": "electrical", "statement": "Reverse input draws < 1 mA at 5 V",
+     "threshold": {"max": 1, "unit": "mA"}, "method": "reverse-connect 5 V, current limit 100 mA, measure 5 s",
+     "instrument": "bench PSU + DMM", "sample": 3, "test_planned": true},
+    {"id": "CRIT-02", "req": "REQ-02", "category": "electrical", "statement": "3.3 V stays within tolerance at 100/200/300 mA",
+     "threshold": {"min": 3.135, "max": 3.465, "unit": "V"}, "method": "DMM at TP2 at three load steps",
+     "instrument": "DMM 0.05%+3", "sample": 3, "test_planned": true},
+    {"id": "CRIT-03", "req": "REQ-03", "category": "electrical", "statement": "Rail in tolerance at 5.0 V input, 300 mA",
+     "threshold": {"min": 3.135, "max": 3.465, "unit": "V"}, "method": "set input to 5.0 V, load 300 mA, measure TP2",
+     "instrument": "DMM + PSU", "sample": 3, "test_planned": true},
+    {"id": "CRIT-04", "req": "REQ-04", "category": "testability", "statement": "Every test point connects to its net",
+     "threshold": {"max": 0.5, "unit": "ohm"}, "method": "continuity from TP to the net's component pad",
+     "instrument": "DMM", "sample": 3, "test_planned": true},
+    {"id": "CRIT-05", "req": "REQ-05", "category": "thermal", "statement": "U1 junction below 85 C at 300 mA",
+     "threshold": {"max": 85, "unit": "C"}, "method": "thermocouple on tab after 10 min; Tj = Tc + P*Rth_jc",
+     "instrument": "K thermocouple +/-1.5 C", "sample": 1, "test_planned": true},
+    {"id": "CRIT-06", "req": "REQ-07", "category": "mechanical", "statement": "Board outline 48.0 x 32.0 mm",
+     "threshold": {"min": 47.9, "max": 48.1, "unit": "mm"}, "method": "caliper on three boards, both axes",
+     "instrument": "caliper 0.02 mm", "sample": 3, "test_planned": true},
+    {"id": "NEG-01", "req": "REQ-02", "category": "electrical", "statement": "No rail overshoot above 3.6 V at power-up",
+     "threshold": {"max": 3.6, "unit": "V"}, "method": "scope capture, 1 ms/div, all three boards",
+     "instrument": "scope 100 MHz", "sample": 3, "test_planned": true}
+  ]
+}

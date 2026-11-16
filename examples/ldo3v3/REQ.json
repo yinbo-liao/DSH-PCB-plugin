@@ -1,0 +1,27 @@
+{
+  "schema": "pcbh/req/1",
+  "board": "LDO3V3",
+  "source": "operator request, 2026-11-16",
+  "requirements": [
+    {"id": "REQ-01", "priority": "must", "class": "safety", "statement": "Input is 5.0 V from a 2-pin terminal, protected against reverse connection",
+     "threshold": "reverse 5 V applied: input current < 1 mA", "unit": "mA", "verification": "reverse-polarity test, current limit 100 mA",
+     "design_element": "D1 series Schottky (SS14) + F1 polyfuse (0.5 A)"},
+    {"id": "REQ-02", "priority": "must", "class": "core", "statement": "Regulated 3.3 V output up to 300 mA continuous",
+     "threshold": "3.135 - 3.465 V at 100/200/300 mA", "unit": "V", "verification": "4-wire DMM at TP2, three load steps",
+     "design_element": "U1 AMS1117-3.3 + C3 22 uF + C4 100 nF"},
+    {"id": "REQ-03", "priority": "must", "class": "core", "statement": "Works across the input range 5.0 - 5.5 V",
+     "threshold": "3.3 V rail within tolerance at 5.0 V input, 300 mA", "unit": "V", "verification": "rail measurement at minimum input",
+     "design_element": "dropout budget: D1 Vf 0.4 V + AMS1117 1.1 V dropout at 300 mA"},
+    {"id": "REQ-04", "priority": "must", "class": "other", "statement": "Output header and test points for 5 V, 3.3 V and GND",
+     "threshold": "continuity < 0.5 ohm from each TP to its net", "unit": "ohm", "verification": "continuity check at first article",
+     "design_element": "J2 output terminal + TP1 (5 V), TP2 (3V3), TP3 (GND)"},
+    {"id": "REQ-05", "priority": "must", "class": "safety", "statement": "Regulator junction temperature below 85 C at 300 mA, 25 C ambient",
+     "threshold": "Tj < 85 C", "unit": "C", "verification": "thermocouple on U1 tab + calculation at S7",
+     "design_element": "2 cm2 copper area on U1 tab (SOT-223)"},
+    {"id": "REQ-06", "priority": "should", "class": "core", "statement": "Indicate 3.3 V present with an LED",
+     "threshold": "LED visible at 3.3 V", "unit": "bool", "verification": "visual", "design_element": "deferred - see GAP-01"},
+    {"id": "REQ-07", "priority": "must", "class": "other", "statement": "48 x 32 mm, 2-layer, 1 oz, 1.6 mm board",
+     "threshold": "outline 48.0 x 32.0 mm +/-0.1", "unit": "mm", "verification": "fab drawing + caliper",
+     "design_element": "Edge.Cuts rectangle, 2 copper layers"}
+  ]
+}
