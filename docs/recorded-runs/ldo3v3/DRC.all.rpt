@@ -1,0 +1,54 @@
+** Drc report for board.kicad_pcb **
+** Created on 2026-11-16T21:19:18 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 12 DRC violations **
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(5.0000 mm, 13.0000 mm): Footprint J1
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(10.0000 mm, 13.0000 mm): Footprint F1
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(15.0000 mm, 13.0000 mm): Footprint D1
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(19.0000 mm, 13.0000 mm): Footprint C1
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(22.0000 mm, 13.0000 mm): Footprint C2
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(28.0000 mm, 13.0000 mm): Footprint U1
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(33.0000 mm, 13.0000 mm): Footprint C3
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(37.0000 mm, 13.0000 mm): Footprint C4
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(42.0000 mm, 13.0000 mm): Footprint J2
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(24.0000 mm, 13.0000 mm): Footprint TP1
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(41.5000 mm, 20.5000 mm): Footprint TP2
+[lib_footprint_issues]: The current configuration does not include the footprint library 'pcbh'
+    Local override; warning
+    @(13.0000 mm, 9.0000 mm): Footprint TP3
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

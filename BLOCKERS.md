@@ -3,7 +3,19 @@
 Recorded rather than hidden: these are the two steps that cannot be completed on the machine
 where this plugin was built. Everything else in the repository is verified.
 
-## B-01 - KiCad is not installed, so gate G4 stays HOLD
+## B-01 - KiCad: RESOLVED 2026-11-16 (was: cannot be installed here)
+
+**Resolution:** a KiCad 10.0.8 installation at `Y:\kicad` was supplied by the operator, and
+`node scripts/record-run.mjs --kicad Y:\kicad\bin\kicad-cli.exe` produced **G4 PASS** with a real
+`kicad-cli pcb drc` (0 errors, 12 triaged warnings). Recorded in
+`docs/recorded-runs/ldo3v3/`.
+
+Closing it also exposed three real bugs, all fixed: the exporter discarded footprint rotation
+(which had produced a genuine 5V/GND short), property text was written in absolute coordinates
+inside a footprint, and the adapter used piped stdio that this sandbox refuses (EPERM).
+
+The original blocker analysis is kept below because it explains why the run needs an operator
+to supply the path.
 
 `B2_kicad_drc` is `not_run`, which means G4 holds. That is the correct behaviour: the gate does
 not claim a board is fab-ready on evidence that does not exist.

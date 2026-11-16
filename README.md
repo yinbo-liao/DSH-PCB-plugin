@@ -70,7 +70,7 @@ defaults:
 | G1 architecture and parts | power budget with margin, derating, BOM lines resolved |
 | G2 targets, tools, plan | every must-have has a criterion; every gate check maps to a deterministic tool |
 | G3 risk and gap closure | risks at RPN >= 60 mitigated; no missing or contradicted requirement |
-| G4 fabrication readiness | kicad-cli DRC, geometry DRC, netlist parity, export parity, footprint record, unmodified ruleset |
+| G4 fabrication readiness | kicad-cli DRC (error-level verdict, warnings triaged), geometry DRC, netlist parity, export parity, footprint record, unmodified ruleset |
 | G5 trial test executed | every criterion measured with a value and an instrument; `not_run` holds the gate |
 | G6 results evaluated | execution-phase traceability: nothing unverified, `match_score` >= 0.90 |
 
@@ -87,24 +87,31 @@ pcb_approve   { runDir: 'runs/a', artifact: 'REQ', approver: 'you' }
 pcb_verify    { runDir: 'runs/a', boardDir: 'examples/ldo3v3', until: 'G4' }
 ```
 
-Measured outcome on a machine **without** KiCad:
+Outcome on a machine **with** KiCad 10.0.8 (`--kicad <path>`):
 
 ```
 G0 scope frozen                  PASS
 G1 architecture and parts        PASS
 G2 targets, tools, plan          PASS
 G3 risk and gap closure          PASS
-G4 fabrication readiness         HOLD  not_run (never counted as pass): kicad-cli unavailable
-  B2g_geometry          pass      0 violations
+G4 fabrication readiness         PASS   kicad-cli pcb drc: 0 errors, 12 warnings triaged
+  B2_kicad_drc          pass      DRC 0 errors
+  B2g_geometry          pass      0 violations across 5 checks
   B3g_netlist_parity    pass      5 nets, 23 pads
+  B3x_export_parity     pass      export matches model (50 items)
   C7_footprint_record   pass      7 footprints verified
   B4_ruleset            pass      ruleset matches baseline
-  B2_kicad_drc          not_run   the only blocker
+S7 trial test                     not_run - no board fabricated, 7 criteria unmeasured
 ```
 
-Install KiCad (or pass `kicadPath`) and G4 re-runs the real DRC; exit code 0 turns it into
-PASS. **`not_run` is never converted to a pass** - a board is not called fab-ready on evidence
-that does not exist.
+Without KiCad the same run records G4 as **HOLD** with `B2_kicad_drc: not_run`, which is the
+correct result and not a failure of the tooling. **`not_run` is never converted to a pass.**
+
+The verdict comes from the **error-level** DRC exit code; every warning is recorded in a second
+all-severity report for triage (see `examples/ldo3v3/hw/DRC-TRIAGE.md`). Closing G4 for real
+found four genuine defects in the exporter, each listed there.
+
+A recorded run is committed in [`docs/recorded-runs/ldo3v3/`](docs/recorded-runs/ldo3v3/README.md).
 
 ## Trial test (S7)
 
@@ -167,7 +174,7 @@ interchangeable:
 
 ## What is verified, and what is not
 
-Verified by this repository's tests (39 tests):
+Verified by this repository's tests (41 tests):
 
 - ledger tamper detection (edit and deletion), live release digest, freshness
 - per-artifact gate digests and gate staleness
@@ -179,6 +186,8 @@ Verified by this repository's tests (39 tests):
 - S7 verdict derivation (pass/marginal/fail/not_run), worst-board-wins, CSV parsing
 - G5 holding on an unexecuted trial test, and G6 requiring full coverage at release
 - every tool spec compiles through the **real** `@deepseek-ai/dsh-tools` `defineTool`
+- against a real `kicad-cli` (set `DSH_KICAD_PATH`): 0 DRC errors on the example board, with the
+  version and warning count recorded; a missing tool stays `not_run`
 
 Not verified - stated plainly:
 
@@ -191,20 +200,16 @@ Not verified - stated plainly:
 - **Supplier existence of BOM MPNs.** There is no parts API; `C5` verifies that the record is
   complete, not that the part is in stock.
 
-## Blockers on the build machine
+## Status of the two blockers
 
-Two steps cannot be completed where this plugin was built; both are recorded with evidence in
-[`BLOCKERS.md`](BLOCKERS.md):
-
-1. **KiCad is not installed** and cannot be installed here: not an administrator, `C:\Program
-   Files` is not writable, no NSIS-capable extractor, and KiCad ships no portable `kicad-cli`.
-   So `B2_kicad_drc` is `not_run` and **G4 holds**. Pass `kicadPath` on a machine with KiCad and
-   it closes.
-2. **No physical board**, so S7 has no real measurements and every criterion is `not_run`.
-   `examples/ldo3v3/MEASUREMENTS.csv` is deliberately empty.
-
-Neither is worked around by weakening a check: substituting the geometry engine for kicad-cli
-would be exactly the dishonesty this plugin exists to prevent.
+1. **KiCad: resolved.** A KiCad 10.0.8 install at `Y:\kicad` was pointed at with `--kicad`, and
+   **G4 now passes** with a real `kicad-cli pcb drc` (0 errors). Installing it from this session
+   was impossible - see [`BLOCKERS.md`](BLOCKERS.md) for the probe evidence - so the run depends on
+   the operator supplying the path. The adapter no longer uses piped stdio (a sandbox refuses
+   those), and records warnings separately from the error verdict.
+2. **No physical board: open.** S7 has no real measurements, so every criterion is `not_run` and
+   `examples/ldo3v3/MEASUREMENTS.csv` is deliberately empty. `pcb_trial_test` derives verdicts
+   the moment those numbers exist.
 
 ## Development
 

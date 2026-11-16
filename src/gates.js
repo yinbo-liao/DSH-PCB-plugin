@@ -111,7 +111,7 @@ export function runGateChecks(ctx, gate) {
         out.push([trace.evaluate(p.REQ, p.TARGETS, p.RESULTS, 'plan'), ['REQ', 'TARGETS']]); break
       case 'B2_kicad_drc':
         if (!existsSync(p.PCB_EXPORT)) out.push([notRun('B2_kicad_drc', 'no .kicad_pcb export to check', 'kicad-cli'), []])
-        else out.push([checks.b2KicadDrc(p.PCB_EXPORT, p.DRC_REPORT, { kicadPath: ctx.kicadPath }), ['PCB']])
+        else out.push([checks.b2KicadDrc(p.PCB_EXPORT, p.DRC_REPORT, { kicadPath: ctx.kicadPath, workDir: ctx.run.reportsDir }), ['PCB']])
         break
       case 'B2g_geometry':
         out.push([checks.b2gGeometry(p.PCB), ['PCB']]); break

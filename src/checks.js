@@ -80,8 +80,10 @@ export function b2KicadDrc(pcbPath, reportPath, options = {}) {
     tool_version: res.version,
     command: res.command,
     exit_code: res.exit_code,
-    detail: res.exit_code === 0 ? 'DRC exit code 0' : `DRC exit code ${res.exit_code}`,
-    data: { report: res.report, stdout_tail: (res.stdout ?? '').slice(-800) },
+    detail: res.exit_code === 0
+      ? `DRC 0 errors${res.warnings === null || res.warnings === undefined ? '' : `, ${res.warnings} warning(s) recorded for triage`}`
+      : `DRC exit code ${res.exit_code}`,
+    data: { report: res.report, warnings_report: res.warnings_report, warnings: res.warnings, stdout_tail: (res.stdout ?? '').slice(-800) },
   })
 }
 
