@@ -326,6 +326,12 @@ export function loadKicadPcb(path) {
     const at = first(fp, 'at')
     const fx = num(at, 1)
     const fy = num(at, 2)
+    // KiCad rotates pads with the footprint: a pad offset is relative to a body that may itself
+    // be rotated, so both the position and the pad angle transform.
+    const frot = num(at, 3, 0)
+    const r = rad(frot)
+    const cos = Math.cos(r)
+    const sin = Math.sin(r)
     let ref = ''
     for (const prop of find(fp, 'property')) if (prop[1] === 'Reference') ref = prop[2]
     for (const pad of find(fp, 'pad')) {
@@ -335,11 +341,15 @@ export function loadKicadPcb(path) {
       const name = pad[1] ?? '1'
       const w = num(size, 1)
       const h = num(size, 2)
+      const dx = num(pat, 1)
+      const dy = num(pat, 2)
+      const px = fx + dx * cos - dy * sin
+      const py = fy + dx * sin + dy * cos
       board.shapes.push({
         kind: 'pad',
         net: nets.get(netNum) ?? '',
         layers: (first(pad, 'layers') ?? []).slice(1),
-        poly: rectPoly(fx + num(pat, 1), fy + num(pat, 2), w, h, num(pat, 3)),
+        poly: rectPoly(px, py, w, h, frot + num(pat, 3)),
         ref: `${ref}.${name}`,
         detail: `${w}x${h}mm`,
       })

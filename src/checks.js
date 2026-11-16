@@ -126,7 +126,7 @@ export function b3xExportParity(boardPath, pcbPath) {
     strength: 'medium',
     detail: res.problems.length
       ? `${res.problems[0]} (${res.model_items} modelled items, ${res.export_items} exported)`
-      : `export matches model (${res.model_items} items)`,
+      : `export matches model positionally (${res.model_items} items, ${res.step_mm} mm)`,
     data: res,
   })
 }

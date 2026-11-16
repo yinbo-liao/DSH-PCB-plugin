@@ -37,8 +37,9 @@ test('every tool spec compiles through the real dsh-tools defineTool', async t =
     // compiled parameter schema: an implicit open object root
     assert.equal(definition.parameters.type, 'object', `${name}: parameters must compile to an object schema`)
     assert.equal(typeof definition.parameters.properties, 'object', `${name}: parameters need properties`)
-    assert.ok(definition.parameters.required.includes('runDir') || name === 'pcb_geometry_drc',
-      `${name}: runDir should be required unless the tool does not take a run`)
+    const pathOnly = ['pcb_geometry_drc', 'pcb_export']
+    assert.ok(definition.parameters.required.includes('runDir') || pathOnly.includes(name),
+      `${name}: runDir should be required unless the tool takes explicit paths only`)
     assert.ok(definition.output.schema, `${name}: output schema must compile`)
   }
   assert.equal(typeof dispose, 'function')

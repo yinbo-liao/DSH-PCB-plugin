@@ -19,6 +19,7 @@ import * as gates from './gates.js'
 import * as geom from './geom.js'
 import * as trace from './trace.js'
 import * as trial from './trial.js'
+import { writePcbExport } from './boardgen.js'
 import { detectKicad } from './kicad.js'
 import { MVP_GATES, ROLE_SCOPES, STAGES } from './config.js'
 
@@ -325,7 +326,26 @@ export function registerTools(ctx, { defineTool, config = {} }) {
     },
   })
 
-  // 10 - run integrity --------------------------------------------------------
+  // 10 - generate the KiCad export from the authoritative model ----------------
+  tools.push({
+    name: 'pcb_export',
+    description: 'Generate the .kicad_pcb export from the authoritative board model, carrying placement rotation and footprint-relative text offsets. The export is what the fab builds; run pcb_verify afterwards to compare it with the model positionally.',
+    parameters: {
+      boardPath: str('Path to board.json (the authoritative board model).'),
+      outPath: optStr('Output .kicad_pcb path. Defaults to board.kicad_pcb next to the model.'),
+    },
+    output: jsonOut(v => TEXT(`exported ${v.path}\n${v.items} copper items, ${v.bytes} bytes`)),
+    execute: async args => {
+      const boardPath = resolve(args.boardPath)
+      if (!existsSync(boardPath)) throw new Error(`board model not found: ${boardPath}`)
+      const { path, bytes, board } = writePcbExport(boardPath, args.outPath ? resolve(args.outPath) : undefined)
+      const items = (board.routes ?? []).reduce((n, r) => n + Math.max(0, r.points.length - 1), 0)
+        + (board.placements ?? []).length * 2 + (board.vias ?? []).length
+      return { path, bytes, items, summary: `exported ${path} (${bytes} bytes)` }
+    },
+  })
+
+  // 11 - run integrity --------------------------------------------------------
   tools.push({
     name: 'pcb_doctor',
     description: 'Check the run itself: ledger hash chain, artifact hash drift, toolkit availability (kicad-cli) and what the gate set can and cannot prove.',
@@ -373,5 +393,5 @@ export function registerTools(ctx, { defineTool, config = {} }) {
 /** Registered tool names, for tests and documentation. */
 export const TOOL_NAMES = [
   'pcb_init', 'pcb_baseline', 'pcb_register', 'pcb_approve', 'pcb_packet_open', 'pcb_packet_close',
-  'pcb_verify', 'pcb_geometry_drc', 'pcb_trace', 'pcb_trial_test', 'pcb_doctor',
+  'pcb_verify', 'pcb_export', 'pcb_geometry_drc', 'pcb_trace', 'pcb_trial_test', 'pcb_doctor',
 ]

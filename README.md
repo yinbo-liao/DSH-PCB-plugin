@@ -57,6 +57,7 @@ defaults:
 | `pcb_packet_open` | Open a typed packet: enforces stage order, budgets, role tool scope and input hashes |
 | `pcb_packet_close` | Close a packet; outputs must be produced by that role, in that role's scope |
 | `pcb_verify` | Run the monitor over G0-G4, record evidence, return PASS / HOLD / REFUSED |
+| `pcb_export` | Generate the `.kicad_pcb` from the board model (rotation and text offsets included) |
 | `pcb_geometry_drc` | Deterministic subset DRC: clearance, track width, annular ring, edge, floating pads |
 | `pcb_trial_test` | S7: turn bench measurements (CSV) into per-criterion verdicts, write `RESULTS.json`, report coverage |
 | `pcb_trace` | Requirement traceability matrix and `match_score` |
@@ -70,7 +71,7 @@ defaults:
 | G1 architecture and parts | power budget with margin, derating, BOM lines resolved |
 | G2 targets, tools, plan | every must-have has a criterion; every gate check maps to a deterministic tool |
 | G3 risk and gap closure | risks at RPN >= 60 mitigated; no missing or contradicted requirement |
-| G4 fabrication readiness | kicad-cli DRC (error-level verdict, warnings triaged), geometry DRC, netlist parity, export parity, footprint record, unmodified ruleset |
+| G4 fabrication readiness | kicad-cli DRC (error-level verdict, warnings triaged), geometry DRC, netlist parity, positional export parity, footprint record, unmodified ruleset |
 | G5 trial test executed | every criterion measured with a value and an instrument; `not_run` holds the gate |
 | G6 results evaluated | execution-phase traceability: nothing unverified, `match_score` >= 0.90 |
 
@@ -112,6 +113,14 @@ all-severity report for triage (see `examples/ldo3v3/hw/DRC-TRIAGE.md`). Closing
 found four genuine defects in the exporter, each listed there.
 
 A recorded run is committed in [`docs/recorded-runs/ldo3v3/`](docs/recorded-runs/ldo3v3/README.md).
+
+### Why the generator lives here
+
+The `.kicad_pcb` generator used to live in a separate Python project. That split is what let a
+dropped placement rotation ship: the model was right, the export was wrong, and the check that
+should have caught it compared counts instead of positions. Both halves now live in one package,
+`pcb_export` produces the file the gate consumes, and the parity check compares every vertex to
+0.01 mm.
 
 ## Trial test (S7)
 
@@ -174,12 +183,13 @@ interchangeable:
 
 ## What is verified, and what is not
 
-Verified by this repository's tests (41 tests):
+Verified by this repository's tests (47 tests):
 
 - ledger tamper detection (edit and deletion), live release digest, freshness
 - per-artifact gate digests and gate staleness
 - clearance/width/annular/edge/floating-pad checks, with a real injected violation
-- netlist and export parity
+- netlist parity, and **positional** export parity (0.01 mm): a dropped rotation or a 0.5 mm shift is caught
+- the generator is deterministic and reproduces the committed export byte for byte
 - approval voiding when the payload changes, ruleset refusal
 - stage ordering, budgets, reserved-tool denial
 - the full S0-G4 flow on the example board, including `not_run` handling
@@ -231,7 +241,8 @@ src/config.js         stages, roles, budgets, gate artifacts, envelope
 src/core.js           artifact store + hash-chained ledger
 src/router.js         packets, scopes, budgets, gate staleness
 src/checks.js         Class A / B / C checks
-src/geom.js           geometry engine + .kicad_pcb reader
+src/geom.js           geometry engine + .kicad_pcb reader (rotation-aware)
+src/boardgen.js       board model -> .kicad_pcb export
 src/parity.js         netlist <-> board <-> export
 src/kicad.js          kicad-cli adapter (fails closed)
 src/gates.js          gate table, monitor, verdict, report

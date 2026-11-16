@@ -1,6 +1,6 @@
 {
   "run": "D:\\data2025\\DSH\\PCB_knowledge\\dsh-pcb-plugin\\runs\\ldo3v3\\run",
-  "generated": "2026-11-16T13:19:19.554Z",
+  "generated": "2026-11-16T13:26:52.491Z",
   "kicad": "Y:\\kicad\\bin\\kicad-cli.exe",
   "gates": [
     {
@@ -12,8 +12,8 @@
           "check": "C0_approval",
           "status": "pass",
           "strength": "strong",
-          "detail": "approved by operator at 2026-11-16T21:19:12+08:00",
-          "evidence_id": "6a2c7681deb9"
+          "detail": "approved by operator at 2026-11-16T21:26:46+08:00",
+          "evidence_id": "6197e9923343"
         }
       ]
     },
@@ -27,21 +27,21 @@
           "status": "pass",
           "strength": "medium",
           "detail": "2 rail(s) within margin",
-          "evidence_id": "458ef25002b6"
+          "evidence_id": "497d7bc29e7d"
         },
         {
           "check": "C4_derating",
           "status": "pass",
           "strength": "medium",
           "detail": "9 items within derating",
-          "evidence_id": "a537a5a061c6"
+          "evidence_id": "6b44aa1857eb"
         },
         {
           "check": "C5_parts_resolved",
           "status": "pass",
           "strength": "medium",
           "detail": "12 BOM lines resolved",
-          "evidence_id": "434e5fd59683"
+          "evidence_id": "128a3e960733"
         }
       ]
     },
@@ -55,14 +55,14 @@
           "status": "pass",
           "strength": "strong",
           "detail": "6 must-haves, all with criteria",
-          "evidence_id": "e2d624f4cf16"
+          "evidence_id": "d4fd79803f09"
         },
         {
           "check": "C9_tool_coverage",
           "status": "pass",
           "strength": "strong",
           "detail": "every gate check maps to a deterministic tool",
-          "evidence_id": "e7c834df5446"
+          "evidence_id": "cb4a4543ceb1"
         }
       ]
     },
@@ -76,14 +76,14 @@
           "status": "pass",
           "strength": "medium",
           "detail": "7 risks within threshold",
-          "evidence_id": "75b8716537b7"
+          "evidence_id": "c446100d5514"
         },
         {
           "check": "C1_traceability",
           "status": "pass",
           "strength": "strong",
           "detail": "match_score 0.2 over 6 must-haves, counts {\"unverified\":6}",
-          "evidence_id": "7f99339876d9"
+          "evidence_id": "dd771fea65a2"
         }
       ]
     },
@@ -97,42 +97,42 @@
           "status": "pass",
           "strength": "strong",
           "detail": "DRC 0 errors, 12 warning(s) recorded for triage",
-          "evidence_id": "f7afb9c3a564"
+          "evidence_id": "201c40319b32"
         },
         {
           "check": "B2g_geometry",
           "status": "pass",
           "strength": "medium",
           "detail": "0 violation(s) across clearance/width/annular/edge/unconnected",
-          "evidence_id": "a8a4f6206867"
+          "evidence_id": "c6a1bd0b79ec"
         },
         {
           "check": "B3g_netlist_parity",
           "status": "pass",
           "strength": "medium",
           "detail": "netlist and board agree (5 nets, 23 pads)",
-          "evidence_id": "280e97747546"
+          "evidence_id": "aa1e3c4330bb"
         },
         {
           "check": "B3x_export_parity",
           "status": "pass",
           "strength": "medium",
-          "detail": "export matches model (50 items)",
-          "evidence_id": "61d5e5c3b78f"
+          "detail": "export matches model positionally (50 items, 0.01 mm)",
+          "evidence_id": "8c8e81ed5da0"
         },
         {
           "check": "C7_footprint_record",
           "status": "pass",
           "strength": "medium",
           "detail": "all 7 footprints verified against a source",
-          "evidence_id": "1b2f9edaca0a"
+          "evidence_id": "c36400177b96"
         },
         {
           "check": "B4_ruleset",
           "status": "pass",
           "strength": "strong",
           "detail": "ruleset matches baseline",
-          "evidence_id": "bf8aa8b5c115"
+          "evidence_id": "5ea0e04f8ced"
         }
       ]
     }

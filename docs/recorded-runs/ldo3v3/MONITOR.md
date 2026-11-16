@@ -2,8 +2,8 @@
 
 - board: **LDO3V3**
 - release_id: `2db515ff5922985be6857b0350afcd0a`
-- generated: 2026-11-16T21:19:19+08:00
-- chain: `{"ok":true,"records":42,"head":"e704cde53884d74da52005742628cab4137c6c7ad2193c3e35b03ce4590e44c9"}`
+- generated: 2026-11-16T21:26:52+08:00
+- chain: `{"ok":true,"records":42,"head":"f3e29baf19d523df7cb8e12c14221a6413d5d1963a5e6c1b781840131ba8449a"}`
 
 A `not_run` check is never a pass. PASS requires every required check to be pass.
 
@@ -21,7 +21,7 @@ A `not_run` check is never a pass. PASS requires every required check to be pass
 
 | check | status | strength | detail |
 |---|---|---|---|
-| C0_approval | pass | strong | approved by operator at 2026-11-16T21:19:12+08:00 |
+| C0_approval | pass | strong | approved by operator at 2026-11-16T21:26:46+08:00 |
 
 ### G1 - PASS
 
@@ -52,7 +52,7 @@ A `not_run` check is never a pass. PASS requires every required check to be pass
 | B2_kicad_drc | pass | strong | DRC 0 errors, 12 warning(s) recorded for triage |
 | B2g_geometry | pass | medium | 0 violation(s) across clearance/width/annular/edge/unconnected |
 | B3g_netlist_parity | pass | medium | netlist and board agree (5 nets, 23 pads) |
-| B3x_export_parity | pass | medium | export matches model (50 items) |
+| B3x_export_parity | pass | medium | export matches model positionally (50 items, 0.01 mm) |
 | C7_footprint_record | pass | medium | all 7 footprints verified against a source |
 | B4_ruleset | pass | strong | ruleset matches baseline |
 
