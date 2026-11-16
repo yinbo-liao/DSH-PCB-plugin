@@ -323,3 +323,39 @@ export function c10RiskMitigated(riskPath) {
     data: { problems },
   })
 }
+/**
+ * Trial results are complete and carry measurement provenance.
+ *
+ * A verdict without an instrument is an opinion. A criterion with no row is untested.
+ */
+export function c11ResultsComplete(resultsPath, targetsPath) {
+  if (!existsSync(resultsPath)) {
+    return result('C11_results_complete', FAIL, { strength: 'strong', detail: 'no RESULTS.json - the trial test was not executed' })
+  }
+  const results = load(resultsPath).results ?? []
+  const criteria = load(targetsPath).criteria ?? []
+  const byCriterion = new Map(results.map(r => [r.criterion, r]))
+  const problems = []
+
+  for (const criterion of criteria) {
+    const row = byCriterion.get(criterion.id)
+    if (!row) problems.push(`${criterion.id}: no measurement row`)
+  }
+  for (const row of results) {
+    if (['pass', 'marginal', 'fail'].includes(row.verdict)) {
+      if (row.value === null || row.value === undefined) problems.push(`${row.criterion}: verdict ${row.verdict} without a value`)
+      if (!row.instrument) problems.push(`${row.criterion}: verdict ${row.verdict} without an instrument`)
+    }
+    // A recorded reason does not make an unexecuted test acceptable: the gate must hold.
+    if (row.verdict === 'not_run') {
+      problems.push(`${row.criterion}: not executed${row.reason ? ` (${row.reason})` : ''}`)
+    }
+  }
+  const counts = {}
+  for (const row of results) counts[row.verdict] = (counts[row.verdict] ?? 0) + 1
+  return result('C11_results_complete', problems.length ? FAIL : PASS, {
+    strength: 'strong',
+    detail: problems[0] ?? `${criteria.length} criteria measured, ${JSON.stringify(counts)}`,
+    data: { problems, counts },
+  })
+}

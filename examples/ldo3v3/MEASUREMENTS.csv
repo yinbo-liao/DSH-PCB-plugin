@@ -1,0 +1,8 @@
+criterion,board,value,unit,instrument,uncertainty,note
+CRIT-01,,,,,,reverse input at 5 V; current must stay below 1 mA
+CRIT-02,,,,,,3.3 V at TP2 at 100 / 200 / 300 mA (use the worst step)
+CRIT-03,,,,,,3.3 V at 5.0 V input, 300 mA
+CRIT-04,,,,,,continuity from each TP to its net
+CRIT-05,,,,,,U1 tab temperature after a 10 min soak at 300 mA
+CRIT-06,,,,,,outline 48.0 x 32.0 mm on three boards
+NEG-01,,,,,,3.3 V overshoot at power-up (scope)

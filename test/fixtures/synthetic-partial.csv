@@ -1,0 +1,7 @@
+criterion,board,value,unit,instrument,uncertainty,note
+CRIT-01,B1,0.02,mA,"DMM 0.05%+3",0.01,SYNTHETIC value for tests
+CRIT-02,B2,3.29,V,"DMM 0.05%+3",0.006,SYNTHETIC value for tests
+CRIT-03,B2,3.28,V,"DMM 0.05%+3",0.006,SYNTHETIC value for tests
+CRIT-04,B2,0.1,ohm,"DMM continuity",0.05,SYNTHETIC value for tests
+CRIT-05,B1,96,C,"K thermocouple",1.5,SYNTHETIC value for tests - deliberately above the 85 C limit
+NEG-01,B1,3.34,V,"scope 100MHz",0.05,SYNTHETIC value for tests

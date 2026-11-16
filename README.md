@@ -58,6 +58,7 @@ defaults:
 | `pcb_packet_close` | Close a packet; outputs must be produced by that role, in that role's scope |
 | `pcb_verify` | Run the monitor over G0-G4, record evidence, return PASS / HOLD / REFUSED |
 | `pcb_geometry_drc` | Deterministic subset DRC: clearance, track width, annular ring, edge, floating pads |
+| `pcb_trial_test` | S7: turn bench measurements (CSV) into per-criterion verdicts, write `RESULTS.json`, report coverage |
 | `pcb_trace` | Requirement traceability matrix and `match_score` |
 | `pcb_doctor` | Ledger chain, hash drift, toolkit availability, gate set |
 
@@ -70,6 +71,8 @@ defaults:
 | G2 targets, tools, plan | every must-have has a criterion; every gate check maps to a deterministic tool |
 | G3 risk and gap closure | risks at RPN >= 60 mitigated; no missing or contradicted requirement |
 | G4 fabrication readiness | kicad-cli DRC, geometry DRC, netlist parity, export parity, footprint record, unmodified ruleset |
+| G5 trial test executed | every criterion measured with a value and an instrument; `not_run` holds the gate |
+| G6 results evaluated | execution-phase traceability: nothing unverified, `match_score` >= 0.90 |
 
 ## Quick start with the bundled example
 
@@ -102,6 +105,30 @@ G4 fabrication readiness         HOLD  not_run (never counted as pass): kicad-cl
 Install KiCad (or pass `kicadPath`) and G4 re-runs the real DRC; exit code 0 turns it into
 PASS. **`not_run` is never converted to a pass** - a board is not called fab-ready on evidence
 that does not exist.
+
+## Trial test (S7)
+
+`pcb_trial_test` converts measurements into verdicts **by comparison**, never by judgement:
+
+| Measurement | Verdict |
+|---|---|
+| absent | `not_run` - and the gate holds |
+| outside the threshold | `fail` |
+| inside but within 10 % of a limit | `marginal` |
+| otherwise | `pass` (value, instrument and uncertainty recorded) |
+
+One row per criterion per board; the **worst** verdict wins, so a bad board cannot be averaged
+away. The procedure, instruments and safety steps for the bundled board are in
+[`examples/ldo3v3/BENCH.md`](examples/ldo3v3/BENCH.md), and the CSV template is
+[`examples/ldo3v3/MEASUREMENTS.csv`](examples/ldo3v3/MEASUREMENTS.csv).
+
+```
+pcb_trial_test { runDir, boardDir: 'examples/ldo3v3', measurementsPath: 'examples/ldo3v3/MEASUREMENTS.csv' }
+pcb_verify     { runDir, boardDir: 'examples/ldo3v3', until: 'G6' }
+```
+
+The template ships with empty values, so today the trial test reports `not_run` for all seven
+criteria and G5 holds. That is the true state of an unbuilt board, not a missing feature.
 
 ## Artifact contract
 
@@ -140,7 +167,7 @@ interchangeable:
 
 ## What is verified, and what is not
 
-Verified by this repository's tests (30 tests):
+Verified by this repository's tests (39 tests):
 
 - ledger tamper detection (edit and deletion), live release digest, freshness
 - per-artifact gate digests and gate staleness
@@ -149,6 +176,8 @@ Verified by this repository's tests (30 tests):
 - approval voiding when the payload changes, ruleset refusal
 - stage ordering, budgets, reserved-tool denial
 - the full S0-G4 flow on the example board, including `not_run` handling
+- S7 verdict derivation (pass/marginal/fail/not_run), worst-board-wins, CSV parsing
+- G5 holding on an unexecuted trial test, and G6 requiring full coverage at release
 - every tool spec compiles through the **real** `@deepseek-ai/dsh-tools` `defineTool`
 
 Not verified - stated plainly:
@@ -161,6 +190,21 @@ Not verified - stated plainly:
   checks are labelled `medium` strength and the gate set names what it checks.
 - **Supplier existence of BOM MPNs.** There is no parts API; `C5` verifies that the record is
   complete, not that the part is in stock.
+
+## Blockers on the build machine
+
+Two steps cannot be completed where this plugin was built; both are recorded with evidence in
+[`BLOCKERS.md`](BLOCKERS.md):
+
+1. **KiCad is not installed** and cannot be installed here: not an administrator, `C:\Program
+   Files` is not writable, no NSIS-capable extractor, and KiCad ships no portable `kicad-cli`.
+   So `B2_kicad_drc` is `not_run` and **G4 holds**. Pass `kicadPath` on a machine with KiCad and
+   it closes.
+2. **No physical board**, so S7 has no real measurements and every criterion is `not_run`.
+   `examples/ldo3v3/MEASUREMENTS.csv` is deliberately empty.
+
+Neither is worked around by weakening a check: substituting the geometry engine for kicad-cli
+would be exactly the dishonesty this plugin exists to prevent.
 
 ## Development
 
@@ -187,8 +231,11 @@ src/parity.js         netlist <-> board <-> export
 src/kicad.js          kicad-cli adapter (fails closed)
 src/gates.js          gate table, monitor, verdict, report
 src/trace.js          traceability matrix and match score
+src/trial.js          S7 measurements -> verdicts
 examples/ldo3v3/      a complete example board and its artifacts
-test/                 30 tests, including red-team cases
+test/                 39 tests, including red-team cases
+scripts/record-run.mjs replay the example and record runs/TRANSCRIPT.json
+BLOCKERS.md           what this environment cannot do, and what unblocks it
 ```
 
 ## Related

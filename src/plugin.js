@@ -18,6 +18,7 @@ import * as checks from './checks.js'
 import * as gates from './gates.js'
 import * as geom from './geom.js'
 import * as trace from './trace.js'
+import * as trial from './trial.js'
 import { detectKicad } from './kicad.js'
 import { MVP_GATES, ROLE_SCOPES, STAGES } from './config.js'
 
@@ -276,7 +277,55 @@ export function registerTools(ctx, { defineTool, config = {} }) {
     },
   })
 
-  // 9 - run integrity ---------------------------------------------------------
+  // 9 - trial test: measurements in, verdicts out -----------------------------
+  tools.push({
+    name: 'pcb_trial_test',
+    description: 'Execute the S7 trial test: convert bench measurements (CSV) into per-criterion verdicts by mechanical comparison, write RESULTS.json, and report coverage. A criterion with no measurement becomes not_run, never pass.',
+    parameters: {
+      runDir: str('Existing run directory.'),
+      boardDir: str('Board artifact directory containing TARGETS.json.'),
+      measurementsPath: optStr('CSV of bench measurements (criterion, board, value, unit, instrument, uncertainty, note). Omit to read an existing RESULTS.json.'),
+      write: { type: 'boolean', description: 'Write RESULTS.json into boardDir. Defaults to true when measurementsPath is given.' },
+      base: optStr('Project root for portable paths.'),
+    },
+    output: jsonOut(v => TEXT(v.summary)),
+    execute: async args => {
+      const { run, boardDir } = resolveRun(args, config)
+      const targetsPath = join(boardDir, 'TARGETS.json')
+      const resultsPath = join(boardDir, 'RESULTS.json')
+      let results
+      if (args.measurementsPath) {
+        results = trial.buildResults(targetsPath, resolvePath(resolve(args.base ?? config.base ?? boardDir), args.measurementsPath))
+        if (args.write !== false) writeFileSync(resultsPath, `${JSON.stringify(results, null, 2)}\n`, 'utf8')
+      } else {
+        if (!existsSync(resultsPath)) throw new Error(`no measurements given and no RESULTS.json at ${resultsPath}`)
+        results = JSON.parse(readFileSync(resultsPath, 'utf8'))
+      }
+      const counts = trial.summary(results)
+      const missing = trial.missingMeasurements(results)
+      const tracePhase = trace.evaluate(join(boardDir, 'REQ.json'), targetsPath, resultsPath, 'release')
+      const summary = [
+        `trial test: ${results.results.length} criteria, ${JSON.stringify(counts)}`,
+        missing.length ? `unmeasured: ${missing.map(m => m.criterion).join(', ')}` : 'every criterion has a measurement',
+        `release traceability: ${tracePhase.status} - ${tracePhase.detail}`,
+      ].join('\n')
+      let resultsSha = null
+      try { resultsSha = run.store.fileHash('RESULTS') } catch { resultsSha = null }
+      run.ledger.append('evidence', {
+        gate: 'G5',
+        check: 'S7_trial_test',
+        status: counts.fail ? 'fail' : counts.not_run ? 'not_run' : 'pass',
+        detail: summary.split('\n')[0],
+        data: { counts, unmeasured: missing.map(m => m.criterion) },
+        inputs: { RESULTS: resultsSha },
+        producer: 'test-engineer',
+        verifier: 'monitor-verifier',
+      })
+      return { counts, missing, results: results.results, trace: { status: tracePhase.status, detail: tracePhase.detail, score: tracePhase.data.score }, summary }
+    },
+  })
+
+  // 10 - run integrity --------------------------------------------------------
   tools.push({
     name: 'pcb_doctor',
     description: 'Check the run itself: ledger hash chain, artifact hash drift, toolkit availability (kicad-cli) and what the gate set can and cannot prove.',
@@ -324,5 +373,5 @@ export function registerTools(ctx, { defineTool, config = {} }) {
 /** Registered tool names, for tests and documentation. */
 export const TOOL_NAMES = [
   'pcb_init', 'pcb_baseline', 'pcb_register', 'pcb_approve', 'pcb_packet_open', 'pcb_packet_close',
-  'pcb_verify', 'pcb_geometry_drc', 'pcb_trace', 'pcb_doctor',
+  'pcb_verify', 'pcb_geometry_drc', 'pcb_trace', 'pcb_trial_test', 'pcb_doctor',
 ]

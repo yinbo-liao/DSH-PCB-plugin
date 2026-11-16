@@ -1,0 +1,8 @@
+criterion,board,value,unit,instrument,uncertainty,note
+CRIT-01,B1,0.02,mA,"DMM 0.05%+3",0.01,SYNTHETIC value for tests - not a bench measurement
+CRIT-02,B2,3.29,V,"DMM 0.05%+3",0.006,SYNTHETIC value for tests - not a bench measurement
+CRIT-03,B2,3.28,V,"DMM 0.05%+3",0.006,SYNTHETIC value for tests - not a bench measurement
+CRIT-04,B2,0.1,ohm,"DMM continuity",0.05,SYNTHETIC value for tests - not a bench measurement
+CRIT-05,B1,72,C,"K thermocouple",1.5,SYNTHETIC value for tests - not a bench measurement
+CRIT-06,B2,48.02,mm,"caliper 0.02",0.02,SYNTHETIC value for tests - not a bench measurement
+NEG-01,B1,3.34,V,"scope 100MHz",0.05,SYNTHETIC value for tests - not a bench measurement

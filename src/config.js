@@ -86,6 +86,8 @@ export const GATE_ARTIFACTS = {
   G2: ['TARGETS', 'TOOLS', 'PLAN'],
   G3: ['RISK', 'GAP', 'LOOPLOG', 'DECISION'],
   G4: ['PCB', 'NETLIST', 'FOOTPRINT_RECORD'],
+  G5: ['TESTPLAN', 'RESULTS'],
+  G6: ['RESULTS', 'EVAL'],
 }
 
 /**

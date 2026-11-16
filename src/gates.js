@@ -19,9 +19,11 @@ export const GATES = {
   G2: { name: 'targets, tools, plan', artifacts: GATE_ARTIFACTS.G2, checks: ['C8_criteria_coverage', 'C9_tool_coverage'], signer: 'monitor-verifier' },
   G3: { name: 'risk and gap closure', artifacts: GATE_ARTIFACTS.G3, checks: ['C10_risk_mitigated', 'C1_traceability_plan'], signer: 'monitor-verifier' },
   G4: { name: 'fabrication readiness (MVP set)', artifacts: GATE_ARTIFACTS.G4, checks: MVP_GATES.G4, signer: 'monitor-verifier' },
+  G5: { name: 'trial test executed', artifacts: GATE_ARTIFACTS.G5, checks: ['C11_results_complete'], signer: 'monitor-verifier' },
+  G6: { name: 'results evaluated', artifacts: GATE_ARTIFACTS.G6, checks: ['C1_traceability_release'], signer: 'monitor-verifier' },
 }
 
-export const GATE_ORDER = ['G0', 'G1', 'G2', 'G3', 'G4']
+export const GATE_ORDER = ['G0', 'G1', 'G2', 'G3', 'G4', 'G5', 'G6']
 
 /** Resolve the artifact paths the monitor needs. Nothing is hidden in module state. */
 export class Context {
@@ -38,6 +40,8 @@ export class Context {
       RISK: join(boardDir, 'RISK.json'),
       TOOLS: join(boardDir, 'TOOLS.json'),
       RESULTS: join(boardDir, 'RESULTS.json'),
+      TESTPLAN: join(boardDir, 'TESTPLAN.md'),
+      EVAL: join(boardDir, 'EVAL.md'),
       PCB: join(boardDir, 'hw', 'board.json'),
       PCB_EXPORT: join(boardDir, 'hw', 'board.kicad_pcb'),
       NETLIST: join(boardDir, 'hw', 'netlist.json'),
@@ -119,6 +123,10 @@ export function runGateChecks(ctx, gate) {
         break
       case 'C7_footprint_record':
         out.push([checks.c7FootprintRecord(p.FOOTPRINT_RECORD, p.PCB), ['PCB']]); break
+      case 'C11_results_complete':
+        out.push([checks.c11ResultsComplete(p.RESULTS, p.TARGETS), ['RESULTS', 'TARGETS']]); break
+      case 'C1_traceability_release':
+        out.push([trace.evaluate(p.REQ, p.TARGETS, p.RESULTS, 'release'), ['REQ', 'TARGETS', 'RESULTS']]); break
       default:
         throw new Error(`unknown check ${id}`)
     }
