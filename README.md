@@ -249,7 +249,7 @@ src/gates.js          gate table, monitor, verdict, report
 src/trace.js          traceability matrix and match score
 src/trial.js          S7 measurements -> verdicts
 examples/ldo3v3/      a complete example board and its artifacts
-test/                 39 tests, including red-team cases
+test/                 47 tests, including red-team cases and the positional-parity cases
 scripts/record-run.mjs replay the example and record runs/TRANSCRIPT.json
 BLOCKERS.md           what this environment cannot do, and what unblocks it
 ```
